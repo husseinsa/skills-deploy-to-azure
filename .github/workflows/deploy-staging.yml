@@ -8,6 +8,7 @@ on:
 env:
   IMAGE_REGISTRY_URL: ghcr.io
   DOCKER_IMAGE_NAME: husseinsa-azure-ttt
+  
   AZURE_WEBAPP_NAME: husseinsa-ttt-app
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -52,6 +53,8 @@ jobs:
           registry: ${{ env.IMAGE_REGISTRY_URL }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: echo username
+        run: echo "Username: ${{ github.actor }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
