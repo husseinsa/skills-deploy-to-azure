@@ -1,28 +1,31 @@
-name: stage app
+name: Deploy to staging
+
 on:
   pull_request:
     types: [labeled]
+
 env:
   IMAGE_REGISTRY_URL: ghcr.io
+  ###############################################
+  ### Replace <username> with GitHub username ###
+  ###############################################
   DOCKER_IMAGE_NAME: husseinsa-azure-ttt
-  
   AZURE_WEBAPP_NAME: husseinsa-ttt-app
+  ###############################################
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    if: contains(github.event.pull_request.labels.*.name,  'stage')
-    
+    if: contains(github.event.pull_request.labels.*.name, 'stage')
+
     runs-on: ubuntu-latest
-  
+
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 16
       - name: npm install and build webpack
-        run: | 
+        run: |
           npm install
           npm run build
       - uses: actions/upload-artifact@v4
@@ -50,8 +53,6 @@ jobs:
           registry: ${{ env.IMAGE_REGISTRY_URL }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: echo username
-        run: echo "Username: ${{ github.actor }}"
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
